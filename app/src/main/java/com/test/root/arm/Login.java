@@ -12,14 +12,14 @@ import android.widget.EditText;
  */
 public class Login extends Activity{
     Button login;
-    EditText uname,pass;
+    EditText uname, pass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        uname=(EditText)findViewById(R.id.etuname);
-        pass=(EditText)findViewById(R.id.etpass);
-        login=(Button)findViewById(R.id.btlogin);
+        uname = (EditText)findViewById(R.id.etuname);
+        pass = (EditText)findViewById(R.id.etpass);
+        login = (Button)findViewById(R.id.btlogin);
         final Intent i = new Intent(Login.this,Workspace.class);
         login.setOnClickListener(new View.OnClickListener() {
             @Override

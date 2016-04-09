@@ -32,18 +32,18 @@ public class Preview extends Selection {
             clri = getIntent().getIntArrayExtra("clri");
             setListData();
 
-            Resources res =getResources();
-            listabsent= ( ListView )findViewById( R.id.lvabsent );  // List defined in XML ( See Below )
-            listlate=(ListView)findViewById(R.id.lvlate);
-            listod=(ListView)findViewById(R.id.lvOD);
-            listpresent=(ListView)findViewById(R.id.lvpresent);
+            Resources res = getResources();
+            listabsent = ( ListView )findViewById( R.id.lvabsent );  // List defined in XML ( See Below )
+            listlate = (ListView)findViewById(R.id.lvlate);
+            listod = (ListView)findViewById(R.id.lvOD);
+            listpresent = (ListView)findViewById(R.id.lvpresent);
 
             adapterabsent = new CustomAdapter( preview, Arrayabsent ,res );
             adapterlate = new CustomAdapter( preview, Arraylate ,res );
             adapterod = new CustomAdapter( preview, Arrayod ,res );
             adapterpresent = new CustomAdapter( preview, Arraypresent ,res );
 
-           listabsent.setAdapter( adapterabsent );
+            listabsent.setAdapter( adapterabsent );
             listpresent.setAdapter(adapterpresent);
             listod.setAdapter(adapterod);
             listlate.setAdapter(adapterlate);
@@ -84,12 +84,8 @@ public class Preview extends Selection {
 
 
     /*****************  This function used by adapter ****************/
-    public void onItemClick(int mPosition)
-    {
+    public void onItemClick(int mPosition) {
         ListModel tempValues = ( ListModel ) Arraypresent.get(mPosition);
-        tempValues.setName("sk");
-
-       // Toast.makeText(CustomListView, "" + tempValues.getName() + " Image:" + tempValues.getImage() + " Url:" + tempValues.getPra(), Toast.LENGTH_LONG).show();
     }
 
 

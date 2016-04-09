@@ -4,9 +4,9 @@ package com.test.root.arm;
  * Created by root on 10/3/16.
  */public class ListModel {
 
-    private  String Name="";
-    private  String Image="";
-    private  String pra="";
+    private  String Name = "";
+    private  String Image = "";
+    private  String pra = "";
 
 
     public void setName(String Name)

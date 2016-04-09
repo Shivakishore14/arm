@@ -53,7 +53,6 @@ public class Sample extends Activity {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pass);
-            /* System.out.println("Databaseection success"); */
 
                 result = "Database connection success\n";
                 Statement st = con.createStatement();
