@@ -10,7 +10,7 @@ import android.widget.ListView;
  */
 public class Workspace extends Activity {
     String s[]={"sken","ksihore","breakfree","closed","matt"},s1[]={"sken1","ksihore1","breakfree1","closed1","matt1"};
-    public String stud[]={"sken","ksihore","breakfree","stud2","stud3","kasda","asdasd","stud22","stud4"};
+    public static String stud[]={"sken","ksihore","breakfree","stud2","stud3","kasda","asdasd","stud22","stud4"};
     ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
