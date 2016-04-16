@@ -88,15 +88,12 @@ public class Tabpreview extends  Selection{
 
             @Override
             public boolean onDown(MotionEvent e) {
-                Toast.makeText(getBaseContext(),"down",Toast.LENGTH_SHORT).show();
                 return true;
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                    float velocityY) {
-                Toast.makeText(getBaseContext(),"fling",Toast.LENGTH_SHORT).show();
-                Log.i("motion", "onFling has been called!");
                 final int SWIPE_MIN_DISTANCE = 120;
                 final int SWIPE_MAX_OFF_PATH = 250;
                 final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -133,13 +130,11 @@ public class Tabpreview extends  Selection{
 
             @Override
             public void onShowPress(MotionEvent e) {
-                Toast.makeText(getBaseContext(),"press",Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                Toast.makeText(getBaseContext(),"tap",Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -147,7 +142,6 @@ public class Tabpreview extends  Selection{
         host.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Toast.makeText(getBaseContext(),"ontouch",Toast.LENGTH_SHORT).show();
                 return gDetector.onTouchEvent(event);
             }
         });
