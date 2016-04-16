@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,25 +40,17 @@ public class Tabpreview extends  Selection{
         clri = getIntent().getIntArrayExtra("clri");
         setListData();
 
-        Resources res = getResources();
+
         listabsent = ( ListView )findViewById( R.id.lvabsent );  // List defined in XML ( See Below )
         listlate = (ListView)findViewById(R.id.lvlate);
         listod = (ListView)findViewById(R.id.lvOD);
         listpresent = (ListView)findViewById(R.id.lvpresent);
         tabHost = (TabHost)findViewById(R.id.tabHost);
 
-        adapterabsent = new CustomAdapter( preview, Arrayabsent ,res );
-        adapterlate = new CustomAdapter( preview, Arraylate ,res );
-        adapterod = new CustomAdapter( preview, Arrayod ,res );
-        adapterpresent = new CustomAdapter( preview, Arraypresent ,res );
-
-        listabsent.setAdapter( adapterabsent );
-        listpresent.setAdapter(adapterpresent);
-        listod.setAdapter(adapterod);
-        listlate.setAdapter(adapterlate);
-
+        setList();
 
         TabHost host = (TabHost)findViewById(R.id.tabHost);
+
         host.setup();
 
         //Tab 1
@@ -83,7 +76,29 @@ public class Tabpreview extends  Selection{
         spec.setContent(R.id.tab4);
         spec.setIndicator("O.D");
         host.addTab(spec);
+      //  for (int i=0; i < 4;i++);
+      //      ((TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextSize(10);
 
+
+    }
+    private void setList(){
+        Resources res = getResources();
+        if(!Arrayabsent.isEmpty()) {
+            adapterabsent = new CustomAdapter(preview, Arrayabsent, res);
+            listabsent.setAdapter(adapterabsent);
+        }
+        if(!Arraylate.isEmpty()) {
+            adapterlate = new CustomAdapter(preview, Arraylate, res);
+            listlate.setAdapter(adapterlate);
+        }
+        if(!Arrayod.isEmpty()) {
+            adapterod = new CustomAdapter(preview, Arrayod, res);
+            listod.setAdapter(adapterod);
+        }
+        if(!Arraypresent.isEmpty()) {
+            adapterpresent = new CustomAdapter(preview, Arraypresent, res);
+            listpresent.setAdapter(adapterpresent);
+        }
     }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
