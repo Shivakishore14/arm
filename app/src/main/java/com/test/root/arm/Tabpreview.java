@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -22,12 +23,12 @@ import java.util.ArrayList;
  */
 public class Tabpreview extends  Selection{
     TabHost tabHost;
-    private GestureDetectorCompat gDetector;
     ListView listabsent,listod,listpresent,listlate;
     CustomAdapter adapterabsent,adapterod,adapterlate,adapterpresent;
     public  Tabpreview preview = null;
     public ArrayList<ListModel> Arrayabsent = new ArrayList<ListModel>(),Arrayod = new ArrayList<ListModel>(),Arraylate = new ArrayList<ListModel>(),Arraypresent = new ArrayList<ListModel>();
     int[] clri = new int[stud.length] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
+    float x=0,y=0;
     // String[] pa=new String[stud.length] , pai = {"Present", "Absent","Late","OnDuty"};
 
     @Override
@@ -83,68 +84,6 @@ public class Tabpreview extends  Selection{
         spec.setIndicator("O.D");
         host.addTab(spec);
 
-
-        gDetector = new GestureDetectorCompat(Tabpreview.this, new GestureDetector.OnGestureListener() {
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                   float velocityY) {
-                final int SWIPE_MIN_DISTANCE = 120;
-                final int SWIPE_MAX_OFF_PATH = 250;
-                final int SWIPE_THRESHOLD_VELOCITY = 200;
-                try {
-                    if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                        return false;
-                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                            && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                        Log.i("motion", "Right to Left");
-                        switchTabs(false);
-                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                            && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-
-                        Log.i("motion", "Left to Right");
-                        switchTabs(true);
-
-                    }
-                } catch (Exception e) {
-                    // nothing
-                }
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2,
-                                    float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
-        });
-        Toast.makeText(getBaseContext(),"oncreate",Toast.LENGTH_SHORT).show();
-        host.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gDetector.onTouchEvent(event);
-            }
-        });
     }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -207,25 +146,5 @@ public class Tabpreview extends  Selection{
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public void switchTabs(boolean direction) {
-
-        Log.w("switch Tabs", "idemo direction");
-        if (direction) // true = move left
-        {
-            if (tabHost.getCurrentTab() != 0)
-                tabHost.setCurrentTab(tabHost.getCurrentTab() - 1);
-        } else
-        // move right
-        {
-            if (tabHost.getCurrentTab() != (tabHost.getTabWidget()
-                    .getTabCount() - 1))
-                tabHost.setCurrentTab(tabHost.getCurrentTab() + 1);
-
-        }
-
-
     }
 }
