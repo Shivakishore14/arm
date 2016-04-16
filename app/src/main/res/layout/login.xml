@@ -2,14 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="100">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="33"/>
+    android:weightSum="100"
+    android:background="?attr/colorPrimary">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,6 +11,27 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="33">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="A.R.M"
+            android:id="@+id/tvTitle"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textSize="50sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="33"
+        android:padding="20sp">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +41,8 @@
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:hint="Username"
-            />
+            android:padding="20sp"
+            android:textColor="@color/colorIcons"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -36,7 +52,9 @@
             android:ems="10"
             android:id="@+id/etpass"
             android:layout_gravity="center_horizontal"
-            android:hint="Password" />
+            android:hint="Password"
+            android:padding="20sp"
+            android:textColor="@color/colorIcons"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -46,6 +64,20 @@
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="33">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logging in as : ShivaKishore"
+            android:id="@+id/tvLoginNotification"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorSecondaryText"
+            />
+    </LinearLayout>
 
 </LinearLayout>

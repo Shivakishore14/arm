@@ -20,10 +20,10 @@ public class Login extends Activity{
         uname = (EditText)findViewById(R.id.etuname);
         pass = (EditText)findViewById(R.id.etpass);
         login = (Button)findViewById(R.id.btlogin);
-        final Intent i = new Intent(Login.this,Workspace.class);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(Login.this,Selection.class);
                 startActivity(i);
             }
         });
