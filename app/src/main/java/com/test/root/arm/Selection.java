@@ -7,16 +7,12 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.ContextMenu;
-import android.view.GestureDetector;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,7 +27,7 @@ public class Selection extends Activity{
     String[] stud = Workspace.stud;
     public Selection CustomListView = null;
     public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
-    public int[] clri = new int[stud.length], clr = {0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
+    public int[] clri = new int[stud.length], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
     String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} , fclass={"cse_a","cse_b","cse c","eee","IT"};
     String s = "";
     int btn ;
@@ -117,8 +113,6 @@ public class Selection extends Activity{
         updateView(mPosition);
         tempValues.setName("sk");
         // SHOW ALERT
-
-        Toast.makeText(CustomListView, "" + tempValues.getName() + " Image:" + tempValues.getImage() + " Url:" + tempValues.getPra(), Toast.LENGTH_LONG).show();
     }
 
     private void updateView(int index) {
@@ -132,7 +126,8 @@ public class Selection extends Activity{
 
         TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.llpa);
-        ll.setBackgroundColor(clr[clri[index]]);
+        int id = getResources().getIdentifier("com.test.root.arm:drawable/"+"od", null, null);
+        tvpa.setBackgroundResource(clr[clri[index]]);//);
         pa[index] = pai[clri[index]];
         tvpa.setText(pa[index]);
 
@@ -157,7 +152,6 @@ public class Selection extends Activity{
         super.onCreateContextMenu(menu, v, menuInfo);
         //MenuInflater inflater = getMenuInflater();
         //inflater.inflate(R.menu.menu_main, menu);
-        Toast.makeText(getBaseContext(),String.valueOf(v.getId()),Toast.LENGTH_SHORT).show();
         switch(v.getId()) {
             case R.id.btnhour:
                 menu.setHeaderTitle("Select Hour");
