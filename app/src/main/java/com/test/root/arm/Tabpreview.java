@@ -2,6 +2,8 @@ package com.test.root.arm;
 
 import android.content.res.Resources;
 import android.gesture.GestureOverlayView;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -39,7 +42,10 @@ public class Tabpreview extends  Selection{
         preview = this;
         clri = getIntent().getIntArrayExtra("clri");
         setListData();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.parseColor("#00796B"));
+        }
 
         listabsent = ( ListView )findViewById( R.id.lvabsent );  // List defined in XML ( See Below )
         listlate = (ListView)findViewById(R.id.lvlate);

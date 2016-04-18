@@ -3,8 +3,11 @@ package com.test.root.arm;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -24,6 +27,10 @@ public class Settings extends Activity{
         ip = (EditText) findViewById(R.id.etdbip);
         save = (Button) findViewById(R.id.btnsave);
         sp = getSharedPreferences("dbinfo", Context.MODE_PRIVATE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.parseColor("#00796B"));
+        }
 
         final SharedPreferences.Editor editor = sp.edit();
 
