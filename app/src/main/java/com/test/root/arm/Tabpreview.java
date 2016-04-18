@@ -76,8 +76,8 @@ public class Tabpreview extends  Selection{
         spec.setContent(R.id.tab4);
         spec.setIndicator("O.D");
         host.addTab(spec);
-      //  for (int i=0; i < 4;i++);
-      //      ((TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextSize(10);
+       for (int i=0; i < 4;i++)
+           ((TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(0xFFFFFFFF);
 
 
     }

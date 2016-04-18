@@ -67,6 +67,7 @@
             android:text="Class"
             android:id="@+id/btnclass"
             android:layout_gravity="right"
+            android:textColor="@color/colorSecondaryText"
             android:background="@android:color/transparent" />
 
         <Button
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:text="hour"
             android:id="@+id/btnhour"
+            android:textColor="@color/colorSecondaryText"
             android:background="@android:color/transparent" />
         <LinearLayout
             android:orientation="horizontal"

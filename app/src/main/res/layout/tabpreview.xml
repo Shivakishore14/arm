@@ -48,7 +48,8 @@
                     <ListView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/lvabsent" />
+                        android:id="@+id/lvabsent"
+                        />
 
                 </LinearLayout>
 
@@ -62,7 +63,8 @@
                     <ListView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/lvlate" />
+                        android:id="@+id/lvlate"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
