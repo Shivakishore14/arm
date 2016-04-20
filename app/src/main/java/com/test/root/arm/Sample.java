@@ -1,12 +1,10 @@
 package com.test.root.arm;
 
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +13,7 @@ import android.widget.TextView;
 
 public class Sample extends Activity {
 
-    private static final String url = "jdbc:mysql://192.168.43.88:3306/storedb";
+    private static final String url = "jdbc:mysql://192.168.1.10:3306/storedb";
     private static final String user = "test";
     private static final String pass = "test";
     public TextView tv;
