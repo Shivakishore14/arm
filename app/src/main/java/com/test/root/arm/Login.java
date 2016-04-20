@@ -1,6 +1,7 @@
 package com.test.root.arm;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ public class Login extends Activity{
     SharedPreferences sp ;
     String dbname,dbpass,dbip;
     Boolean a;
+    ProgressDialog progress ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,12 @@ public class Login extends Activity{
         notification = (TextView) findViewById(R.id.tvLoginNotification);
         sp  = getApplicationContext().getSharedPreferences("dbinfo", Context.MODE_PRIVATE);
         dbname = sp.getString("dbuname", null);
-        dbpass = sp.getString("dbpass",null);
+        dbpass = sp.getString("dbpass", null);
         dbip = sp.getString("dbip",null);
+        progress = new ProgressDialog(this);
+        progress.setMessage("Loging in...");
 
+// To dismiss the dialog
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -89,6 +94,7 @@ public class Login extends Activity{
 
         @Override
         protected void onPostExecute(String result) {
+            progress.dismiss();
             String name = uname.getText().toString();
             if(result == null || name == null){
                 //Toast.makeText(getBaseContext(),"Invalid Username or Password",Toast.LENGTH_SHORT).show();
@@ -103,7 +109,7 @@ public class Login extends Activity{
 
         @Override
         protected void onPreExecute() {
-
+            progress.show();
         }
 
         @Override
