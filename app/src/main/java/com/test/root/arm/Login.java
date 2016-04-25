@@ -16,6 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.ResultSet;
 
 /**
@@ -26,7 +33,7 @@ public class Login extends Activity{
     EditText uname, pass;
     TextView notification;
     SharedPreferences sp ;
-
+    String username, password;
     Boolean a;
     ProgressDialog progress ;
 
@@ -53,10 +60,16 @@ public class Login extends Activity{
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = uname.getText().toString();
-                String password = pass.getText().toString();
+                username = uname.getText().toString();
+                password = pass.getText().toString();
                 if (username.length() != 0) {
-                    notification.setText("Logging in as :" + username);
+                    try {
+                        BackTask st = new BackTask();
+                        st.execute();
+                        notification.setText("Logging in as :" + username);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                    } else {
                     notification.setText("Enter valid username");
                 }
@@ -64,4 +77,64 @@ public class Login extends Activity{
         });
 
     }
+
+    private class BackTask extends AsyncTask<String, String, String> {
+
+        private String result = null;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String data = URLEncoder.encode("name", "UTF-8") + "=" +
+                        URLEncoder.encode(username, "UTF-8") + "&" +
+                        URLEncoder.encode("password", "UTF-8") + "=" +
+                        URLEncoder.encode(password, "UTF-8");
+                BufferedReader reader = null;
+                try {
+                    URL url = new URL(util.ip+"z.php");
+                    URLConnection con = url.openConnection();
+                    con.setDoOutput(true);
+                    OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                    //getting response back
+                    reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    StringBuilder s = new StringBuilder();
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        s.append(line + "\n");
+                    }
+                    result = s.toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+            return result;
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progress.dismiss();
+            notification.setText(result);
+            result = result.trim();
+            if (result.equals("SUCCESS")){
+                Intent i = new Intent(Login.this,Selection.class);
+                startActivity(i);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            // progress. For example updating ProgessDialog
+        }
+    }
 }
+
