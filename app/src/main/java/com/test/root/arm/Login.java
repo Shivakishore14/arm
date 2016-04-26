@@ -120,7 +120,7 @@ public class Login extends Activity{
             progress.dismiss();
             notification.setText(result);
             result = result.trim();
-            if (result.equals("SUCCESS")){
+            if (!result.equals("NOT AUTHENTICATED")){
                 Intent i = new Intent(Login.this,Selection.class);
                 startActivity(i);
             }

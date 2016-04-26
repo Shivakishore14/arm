@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,8 +20,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +45,7 @@ public class Selection extends AppCompatActivity{
     public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
     public int[] clri = new int[stud.length], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
     String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} , fclass={"cse_a","cse_b","cse c","eee","IT"};
-    String s = "";
+    String s = "",key = "",value;
     int btn ;
     float lastX = (float) 0.0;
 
@@ -65,7 +74,6 @@ public class Selection extends AppCompatActivity{
         }
 
 
-        //btest = (Button) findViewById(R.id.btntest);
         bclass = (Button) findViewById(R.id.btnclass);
         bhour = (Button) findViewById(R.id.btnhour);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -92,23 +100,7 @@ public class Selection extends AppCompatActivity{
                 startActivity(i);
             }
         });
-//           getActionBar().setTitle("Hello world App");
-       // getSupportActionBar().setTitle("Hello world App");
     }
-   /* @Override
-    public void setActionBar(String heading) {
-        // TODO Auto-generated method stub
-
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(tb);
-        tb.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.title_bar_gray)));
-        actionBar.setTitle(heading);
-        actionBar.show();
-
-    }*/
 
     private void setListData() {
 
@@ -163,8 +155,6 @@ public class Selection extends AppCompatActivity{
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.menu_main, menu);
         switch(v.getId()) {
             case R.id.btnhour:
                 menu.setHeaderTitle("Select Hour");
@@ -192,6 +182,54 @@ public class Selection extends AppCompatActivity{
             bclass.setText("Class : "+item.getTitle());
         return true;
     }
+    private class BackTask extends AsyncTask<String, String, String> {
 
+        private String result = null;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String data = URLEncoder.encode("key", "UTF-8") + "=" +
+                        URLEncoder.encode(key, "UTF-8");
+                BufferedReader reader = null;
+                try {
+                    URL url = new URL(util.ip+"z1.php");
+                    URLConnection con = url.openConnection();
+                    con.setDoOutput(true);
+                    OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                    //getting response back
+                    reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    StringBuilder s = new StringBuilder();
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        s.append(line + "\n");
+                    }
+                    result = s.toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+            return result;
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getBaseContext(),result,Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            // progress. For example updating ProgessDialog
+        }
+    }
 
 }
