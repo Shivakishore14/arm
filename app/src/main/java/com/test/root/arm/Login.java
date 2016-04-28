@@ -91,7 +91,7 @@ public class Login extends Activity{
                         URLEncoder.encode(password, "UTF-8");
                 BufferedReader reader = null;
                 try {
-                    URL url = new URL(util.ip+"z.php");
+                    URL url = new URL(util.ip+"/Armweb/Login");
                     URLConnection con = url.openConnection();
                     con.setDoOutput(true);
                     OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
