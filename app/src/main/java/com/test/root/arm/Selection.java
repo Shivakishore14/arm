@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -44,7 +49,7 @@ public class Selection extends AppCompatActivity{
     public Selection CustomListView = null;
     public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
     public int[] clri = new int[stud.length], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
-    String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} , fclass={"cse_a","cse_b","cse c","eee","IT"};
+    String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} , fclass=new String[100];
     String s = "",key = "",value;
     int btn ;
     float lastX = (float) 0.0;
@@ -230,6 +235,52 @@ public class Selection extends AppCompatActivity{
         protected void onProgressUpdate(String... text) {
             // progress. For example updating ProgessDialog
         }
+    }
+    private class GetDetails extends AsyncTask<Void, Void, Void> {
+        String hour ;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            // Creating service handler class instance
+
+            // Making a request to url and getting response
+            String jsonStr = "null";
+
+            Log.d("Response: ", "> " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject("json");
+                    JSONArray classes = jsonObj.getJSONArray("classes");
+                    //JSONArray classlist = jsonObj.getJSONArray("classes");
+                    JSONObject period = jsonObj.getJSONObject("hour");
+                    JSONObject currentclass = jsonObj.getJSONObject("class");
+                    // looping through All Contacts
+                    for (int i = 0; i < classes.length(); i++) {
+                        JSONObject c = classes.getJSONObject(i);
+                        fclass[i] = c.getString("class");
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("json", "not available");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
     }
 
 }
