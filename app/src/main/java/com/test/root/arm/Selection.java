@@ -49,10 +49,12 @@ public class Selection extends AppCompatActivity{
     public Selection CustomListView = null;
     public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
     public int[] clri = new int[stud.length], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
-    String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} , fclass=new String[100];
-    String s = "",key = "",value;
+    String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} ;
+    String s = "",key = "",value,cHour="hour",cClass="class";
     int btn ;
     float lastX = (float) 0.0;
+    String jsonStr ;
+    ArrayList<String> fclass = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,15 @@ public class Selection extends AppCompatActivity{
         adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res);
         list.setAdapter(adapter);
 
+        Intent i = this.getIntent();
+        Bundle b = i.getExtras();
+        jsonStr =(String) b.get("json");
+        jsonStr = jsonStr.substring(jsonStr.indexOf("{"), jsonStr.lastIndexOf("}") + 1);
+
+
+        GetDetails g = new GetDetails();
+        g.execute("{\"json\":[{\"classes\":[{\"Class\":\"a\"},{\"Class\":\"b\"},{\"Class\":\"c\"},{\"Class\":\"d\"},{\"Class\":\"e\"},{\"Class\":\"f\"},{\"Class\":\"g\"},{\"Class\":\"h\"}]},{\"Hour\":\"8\"},{\"current\":\"d\"}]}\n");
+
         setpa();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -81,6 +92,9 @@ public class Selection extends AppCompatActivity{
 
         bclass = (Button) findViewById(R.id.btnclass);
         bhour = (Button) findViewById(R.id.btnhour);
+
+        bclass.setText(cClass);
+        bhour.setText(cHour);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         registerForContextMenu(bclass);
@@ -171,8 +185,8 @@ public class Selection extends AppCompatActivity{
             case R.id.btnclass:
                 menu.setHeaderTitle("Select The Class");
                 btn = 1;
-                for(int i=0;i<fclass.length;i++) {
-                    menu.add(0, v.getId(), 0, fclass[i]);
+                for(int i=0;i<fclass.size();i++) {
+                    menu.add(0, v.getId(), 0, fclass.get(i));
                 }
                 break;
         }
@@ -236,7 +250,7 @@ public class Selection extends AppCompatActivity{
             // progress. For example updating ProgessDialog
         }
     }
-    private class GetDetails extends AsyncTask<Void, Void, Void> {
+    private class GetDetails extends AsyncTask<String, String, String> {
         String hour ;
         @Override
         protected void onPreExecute() {
@@ -245,28 +259,30 @@ public class Selection extends AppCompatActivity{
         }
 
         @Override
-        protected Void doInBackground(Void... arg0) {
+        protected String doInBackground(String... arg) {
             // Creating service handler class instance
 
             // Making a request to url and getting response
-            String jsonStr = "null";
+
 
             Log.d("Response: ", "> " + jsonStr);
 
             if (jsonStr != null) {
                 try {
-                    JSONObject jsonObj = new JSONObject("json");
-                    JSONArray classes = jsonObj.getJSONArray("classes");
-                    //JSONArray classlist = jsonObj.getJSONArray("classes");
-                    JSONObject period = jsonObj.getJSONObject("hour");
-                    JSONObject currentclass = jsonObj.getJSONObject("class");
+                    JSONObject mainjsonObj = new JSONObject(jsonStr);
+                    JSONArray jsonObj = mainjsonObj.getJSONArray("json");
+                    JSONObject classesstdclass = jsonObj.getJSONObject(0);
+                    JSONArray classes = classesstdclass.getJSONArray("classes");
+                    JSONObject period = jsonObj.getJSONObject(1);
+                    JSONObject currentclass = jsonObj.getJSONObject(2);
                     // looping through All Contacts
-                    for (int i = 0; i < classes.length(); i++) {
-                        JSONObject c = classes.getJSONObject(i);
-                        fclass[i] = c.getString("class");
-
+                   for (int i = 0; i < classes.length(); i++) {
+                       JSONObject c = classes.getJSONObject(i);
+                        fclass.add(c.getString("Class"));
                     }
-                } catch (JSONException e) {
+                    cHour = period.getString("Hour");
+                    cClass = currentclass.getString("current");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
@@ -277,9 +293,12 @@ public class Selection extends AppCompatActivity{
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            bclass.setText(cClass);
+            bhour.setText("Hour:"+cHour);
         }
+
 
     }
 
