@@ -122,7 +122,8 @@ public class Login extends Activity{
 
         @Override
         protected void onPostExecute(String result) {
-            progress.dismiss();
+
+           progress.dismiss();
             notification.setText(result);
             if (!result.equals("NOT AUTHENTICATED")){
                 Intent i = new Intent(Login.this,Selection.class);

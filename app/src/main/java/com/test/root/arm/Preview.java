@@ -17,7 +17,7 @@ public class Preview extends Selection {
         CustomAdapter adapterabsent,adapterod,adapterlate,adapterpresent;
         public  Preview preview = null;
         public ArrayList<ListModel> Arrayabsent = new ArrayList<ListModel>(),Arrayod = new ArrayList<ListModel>(),Arraylate = new ArrayList<ListModel>(),Arraypresent = new ArrayList<ListModel>();
-       int[] clri = new int[stud.length] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
+       int[] clri = new int[stud.size()] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
        // String[] pa=new String[stud.length] , pai = {"Present", "Absent","Late","OnDuty"};
 
 
@@ -55,11 +55,11 @@ public class Preview extends Selection {
 
     public void setListData() {
 
-        for (int i = 0; i < stud.length; i++) {
+        for (int i = 0; i < stud.size(); i++) {
 
             final ListModel s = new ListModel();
 
-            s.setName(stud[i]);
+            s.setName(stud.get(i));
             if(clri[i] == 0){
                 s.setPra("Present");
                 Arraypresent.add(s);

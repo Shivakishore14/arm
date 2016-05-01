@@ -25,13 +25,13 @@ import java.util.ArrayList;
 /**
  * Created by root on 15/4/16.
  */
-public class Tabpreview extends  Selection{
+public class Tabpreview extends  AppCompatActivity{
     TabHost tabHost;
     ListView listabsent,listod,listpresent,listlate;
     CustomAdapter adapterabsent,adapterod,adapterlate,adapterpresent;
     public  Tabpreview preview = null;
     public ArrayList<ListModel> Arrayabsent = new ArrayList<ListModel>(),Arrayod = new ArrayList<ListModel>(),Arraylate = new ArrayList<ListModel>(),Arraypresent = new ArrayList<ListModel>();
-    int[] clri = new int[stud.length] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
+    int[] clri = new int[50] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
     float x=0,y=0;
     // String[] pa=new String[stud.length] , pai = {"Present", "Absent","Late","OnDuty"};
 
@@ -116,11 +116,11 @@ public class Tabpreview extends  Selection{
 
     public void setListData() {
 
-        for (int i = 0; i < stud.length; i++) {
+        for (int i = 0; i < 50; i++) {
 
             final ListModel s = new ListModel();
 
-            s.setName(stud[i]);
+            s.setName(Selection.stud.get(i));
             if(clri[i] == 0){
                 s.setPra("Present");
                 Arraypresent.add(s);

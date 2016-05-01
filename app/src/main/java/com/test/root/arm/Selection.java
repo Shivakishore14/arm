@@ -45,16 +45,16 @@ public class Selection extends AppCompatActivity{
     ListView list;
     CustomAdapter adapter;
     Button  bclass, bhour;
-    String[] stud = Workspace.stud;
+    //String[] stud = Workspace.stud;
     public Selection CustomListView = null;
     public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
-    public int[] clri = new int[stud.length], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
-    String[] pa = new String[stud.length], pai = {"Present", "Absent", "Late", "OnDuty"} ;
+    public int[] clri = new int[50], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
+    String[] pai = {"present", "absent", "late", "onDuty"} ;
     String s = "",key = "",value,cHour="hour",cClass="class";
     int btn ;
     float lastX = (float) 0.0;
     String jsonStr ;
-    ArrayList<String> fclass = new ArrayList<String>();
+    static ArrayList<String> fclass = new ArrayList<String>(),stud  = new ArrayList<String>(),pa  = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +62,14 @@ public class Selection extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selection);
-
+        BackTask btask= new BackTask();
+        btask.execute("null");
         CustomListView = this;
 
-        setListData();
 
-        Resources res = getResources();
         list = (ListView) findViewById(R.id.list);  // List defined in XML ( See Below )
 
-        adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res);
-        list.setAdapter(adapter);
+
 
         Intent i = this.getIntent();
         Bundle b = i.getExtras();
@@ -80,9 +78,7 @@ public class Selection extends AppCompatActivity{
 
 
         GetDetails g = new GetDetails();
-        g.execute("{\"json\":[{\"classes\":[{\"Class\":\"a\"},{\"Class\":\"b\"},{\"Class\":\"c\"},{\"Class\":\"d\"},{\"Class\":\"e\"},{\"Class\":\"f\"},{\"Class\":\"g\"},{\"Class\":\"h\"}]},{\"Hour\":\"8\"},{\"current\":\"d\"}]}\n");
-
-        setpa();
+        g.execute("null");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -123,17 +119,17 @@ public class Selection extends AppCompatActivity{
 
     private void setListData() {
 
-        for (int i = 0; i < stud.length; i++) {
+        for (int i = 0; i < stud.size(); i++) {
 
             final ListModel sched = new ListModel();
 
-            sched.setName(stud[i]);
+            sched.setName(stud.get(i));
             sched.setImage("image" + i);
-            sched.setPra("Present");
+            pa.set(i, pai[clri[i]]);
+            sched.setPra(pa.get(i));
             // CustomListViewValuesArr.
             CustomListViewValuesArr.add(sched);
         }
-
     }
 
 
@@ -157,15 +153,15 @@ public class Selection extends AppCompatActivity{
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.llpa);
         int id = getResources().getIdentifier("com.test.root.arm:drawable/"+"od", null, null);
         tvpa.setBackgroundResource(clr[clri[index]]);//);
-        pa[index] = pai[clri[index]];
-        tvpa.setText(pa[index]);
+        pa.set(index,pai[clri[index]]);
+        tvpa.setText(pa.get(index));
 
 
     }
 
     private void setpa() {
-        for (int i = 0; i < stud.length; i++) {
-            pa[i] = "P";
+        for (int i = 0; i < stud.size(); i++) {
+            //pa[i] = "P";
             clri[i] = 0;
         }
     }
@@ -208,11 +204,11 @@ public class Selection extends AppCompatActivity{
         @Override
         protected String doInBackground(String... params) {
             try {
-                String data = URLEncoder.encode("key", "UTF-8") + "=" +
+                String data = URLEncoder.encode("class", "UTF-8") + "=" +
                         URLEncoder.encode(key, "UTF-8");
                 BufferedReader reader = null;
                 try {
-                    URL url = new URL(util.ip+"z1.php");
+                    URL url = new URL(util.ip+"Armweb/workspace");
                     URLConnection con = url.openConnection();
                     con.setDoOutput(true);
                     OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
@@ -232,13 +228,44 @@ public class Selection extends AppCompatActivity{
             }catch (UnsupportedEncodingException e){
                 e.printStackTrace();
             }
+
+            Log.d("Response BackTask : ", "> " + result);
+
+            if (result != null) {
+                try {
+                    JSONObject mainjsonObj = new JSONObject(result);
+                    JSONArray jsonar = mainjsonObj.getJSONArray("students");
+
+                    // looping through All Contacts
+                    for (int i = 0; i < jsonar.length(); i++) {
+                        JSONObject c = jsonar.getJSONObject(i);
+                        stud.add(c.getString("stud"));
+                        pa.add(c.getString("pa"));
+                        for(int j=0; j<4 ; j++ )
+                            if(pa.get(i).equals(pai[j])){
+                                clri[i] = j;
+
+                            }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("json", "not available");
+            }
+
             return result;
 
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getBaseContext(),result,Toast.LENGTH_SHORT).show();
+            setListData();
+            Resources res = getResources();
+            adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res);
+            list.setAdapter(adapter);
         }
 
         @Override
