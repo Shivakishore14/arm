@@ -113,6 +113,9 @@ public class Selection extends AppCompatActivity{
             public void onClick(View view) {
                 Intent i = new Intent(Selection.this, Tabpreview.class);
                 i.putExtra("clri", clri);
+                String[] studarray = new String[stud.size()];
+                studarray = stud.toArray(studarray);
+                i.putExtra("stud",studarray);
                 startActivity(i);
             }
         });
@@ -157,7 +160,7 @@ public class Selection extends AppCompatActivity{
         pa.set(index,pai[clri[index]]);
         tvpa.setText(pa.get(index));
     }
-    
+
     private void setpa() {
         for (int i = 0; i < stud.size(); i++) {
             //pa[i] = "P";

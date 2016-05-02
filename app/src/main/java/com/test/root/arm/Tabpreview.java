@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by root on 15/4/16.
@@ -31,6 +33,8 @@ public class Tabpreview extends  AppCompatActivity{
     CustomAdapter adapterabsent,adapterod,adapterlate,adapterpresent;
     public  Tabpreview preview = null;
     public ArrayList<ListModel> Arrayabsent = new ArrayList<ListModel>(),Arrayod = new ArrayList<ListModel>(),Arraylate = new ArrayList<ListModel>(),Arraypresent = new ArrayList<ListModel>();
+    ArrayList<String> stud ;
+    String[] stud1;
     int[] clri = new int[50] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
     float x=0,y=0;
     // String[] pa=new String[stud.length] , pai = {"Present", "Absent","Late","OnDuty"};
@@ -41,6 +45,9 @@ public class Tabpreview extends  AppCompatActivity{
         setContentView(R.layout.tabpreview);
         preview = this;
         clri = getIntent().getIntArrayExtra("clri");
+       // List<String> stud11 =Arrays.<String>asList(getIntent().getStringArrayExtra("stud"));
+        //stud = new ArrayList<String>(stud11);
+        stud1 = getIntent().getStringArrayExtra("stud");
         setListData();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -116,11 +123,11 @@ public class Tabpreview extends  AppCompatActivity{
 
     public void setListData() {
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < stud1.length; i++) {
 
             final ListModel s = new ListModel();
 
-            s.setName(Selection.stud.get(i));
+            s.setName(stud1[i]);
             if(clri[i] == 0){
                 s.setPra("Present");
                 Arraypresent.add(s);
