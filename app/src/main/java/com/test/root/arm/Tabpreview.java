@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,7 +36,7 @@ public class Tabpreview extends  AppCompatActivity{
     public ArrayList<ListModel> Arrayabsent = new ArrayList<ListModel>(),Arrayod = new ArrayList<ListModel>(),Arraylate = new ArrayList<ListModel>(),Arraypresent = new ArrayList<ListModel>();
     ArrayList<String> stud ;
     String[] stud1;
-    int[] clri = new int[50] , clr = {0xFF0DFF00,0xFFFF3C00,0xFFFF9500,0xFF00A6FF};
+    int[] clri = new int[50] , clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od};
     float x=0,y=0;
     // String[] pa=new String[stud.length] , pai = {"Present", "Absent","Late","OnDuty"};
 
@@ -97,15 +98,39 @@ public class Tabpreview extends  AppCompatActivity{
     private void setList(){
         Resources res = getResources();
         if(!Arrayabsent.isEmpty()) {
-            adapterabsent = new CustomAdapter(preview, Arrayabsent, res);
+            adapterabsent = new CustomAdapter(preview, Arrayabsent, res){
+                @Override
+                public View getView(int index, View convertView,ViewGroup parent) {
+                    View v =super.getView(index, convertView, parent);
+                    TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
+                    tvpa.setBackgroundResource(clr[1]);
+                    return v;
+                }
+            };
             listabsent.setAdapter(adapterabsent);
         }
         if(!Arraylate.isEmpty()) {
-            adapterlate = new CustomAdapter(preview, Arraylate, res);
+            adapterlate = new CustomAdapter(preview, Arraylate, res){
+                @Override
+                public View getView(int index, View convertView,ViewGroup parent) {
+                    View v =super.getView(index, convertView, parent);
+                    TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
+                    tvpa.setBackgroundResource(clr[2]);
+                    return v;
+                }
+            };
             listlate.setAdapter(adapterlate);
         }
         if(!Arrayod.isEmpty()) {
-            adapterod = new CustomAdapter(preview, Arrayod, res);
+            adapterod = new CustomAdapter(preview, Arrayod, res){
+                @Override
+                public View getView(int index, View convertView,ViewGroup parent) {
+                    View v =super.getView(index, convertView, parent);
+                    TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
+                    tvpa.setBackgroundResource(clr[3]);
+                    return v;
+                }
+            };
             listod.setAdapter(adapterod);
         }
         if(!Arraypresent.isEmpty()) {
