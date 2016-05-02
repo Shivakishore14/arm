@@ -155,8 +155,17 @@ public class Selection extends AppCompatActivity{
         tvpa.setBackgroundResource(clr[clri[index]]);//);
         pa.set(index,pai[clri[index]]);
         tvpa.setText(pa.get(index));
-
-
+    }
+    public void afterimport(){
+        for(int index = 0; index < stud.size(); index++) {
+            View v = list.getChildAt(index -
+                    list.getFirstVisiblePosition());
+            TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
+            tvpa.setBackgroundResource(clr[clri[index]]);//);
+            Log.e("info",pa.get(index));
+            pa.set(index, pai[clri[index]]);
+            tvpa.setText(pa.get(index));
+        }
     }
 
     private void setpa() {
@@ -266,6 +275,7 @@ public class Selection extends AppCompatActivity{
             Resources res = getResources();
             adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res);
             list.setAdapter(adapter);
+            afterimport();
         }
 
         @Override
