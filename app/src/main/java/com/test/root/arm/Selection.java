@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -156,18 +157,7 @@ public class Selection extends AppCompatActivity{
         pa.set(index,pai[clri[index]]);
         tvpa.setText(pa.get(index));
     }
-    public void afterimport(){
-        for(int index = 0; index < stud.size(); index++) {
-            View v = list.getChildAt(index -
-                    list.getFirstVisiblePosition());
-            TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
-            tvpa.setBackgroundResource(clr[clri[index]]);//);
-            Log.e("info",pa.get(index));
-            pa.set(index, pai[clri[index]]);
-            tvpa.setText(pa.get(index));
-        }
-    }
-
+    
     private void setpa() {
         for (int i = 0; i < stud.size(); i++) {
             //pa[i] = "P";
@@ -273,9 +263,20 @@ public class Selection extends AppCompatActivity{
         protected void onPostExecute(String result) {
             setListData();
             Resources res = getResources();
-            adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res);
+            adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res){
+                @Override
+                public View getView(int index, View convertView,ViewGroup parent) {
+                    View v =super.getView(index, convertView, parent);
+                    TextView tvpa = (TextView) v.findViewById(R.id.tvpa);
+                    tvpa.setBackgroundResource(clr[clri[index]]);//);
+                    Log.e("info",pa.get(index));
+                    pa.set(index, pai[clri[index]]);
+                    tvpa.setText(pa.get(index));
+                    return v;
+                }
+            };
             list.setAdapter(adapter);
-            afterimport();
+            //afterimport();
         }
 
         @Override
