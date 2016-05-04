@@ -96,7 +96,8 @@
                 android:text="Import"
                 android:gravity="center_vertical"
                 android:layout_gravity="right"
-                android:layout_weight="15"/>
+                android:layout_weight="15"
+                android:id="@+id/tvimport" />
 
         </LinearLayout>
         </LinearLayout>

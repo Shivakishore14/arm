@@ -48,12 +48,13 @@ public class Selection extends AppCompatActivity{
     Button  bclass, bhour;
     //String[] stud = Workspace.stud;
     public Selection CustomListView = null;
-    public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
+    public ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>(),noValueListView = new ArrayList<ListModel>();
     public int[] clri = new int[50], clr ={R.drawable.present, R.drawable.absent, R.drawable.late, R.drawable.od}; //{0xFF0DFF00, 0xFFFF3C00, 0xFFFF9500, 0xFF00A6FF};
     String[] pai = {"present", "absent", "late", "onDuty"} ;
     String s = "",key = "",value,cHour="hour",cClass="class";
     int btn ;
     float lastX = (float) 0.0;
+    TextView importLast;
     String jsonStr ;
     static ArrayList<String> fclass = new ArrayList<String>(),stud  = new ArrayList<String>(),pa  = new ArrayList<String>();
 
@@ -64,7 +65,7 @@ public class Selection extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selection);
         BackTask btask= new BackTask();
-        btask.execute("null");
+        btask.execute("");
         CustomListView = this;
 
 
@@ -79,7 +80,7 @@ public class Selection extends AppCompatActivity{
 
 
         GetDetails g = new GetDetails();
-        g.execute("null");
+        g.execute("");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -89,6 +90,7 @@ public class Selection extends AppCompatActivity{
 
         bclass = (Button) findViewById(R.id.btnclass);
         bhour = (Button) findViewById(R.id.btnhour);
+        importLast = (TextView) findViewById(R.id.tvimport);
 
         bclass.setText(cClass);
         bhour.setText(cHour);
@@ -119,14 +121,24 @@ public class Selection extends AppCompatActivity{
                 startActivity(i);
             }
         });
+
+        importLast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BackTask btask= new BackTask();
+                btask.execute("cse","5");
+            }
+        });
+
     }
 
     private void setListData() {
 
+        CustomListViewValuesArr.clear();
         for (int i = 0; i < stud.size(); i++) {
 
             final ListModel sched = new ListModel();
-
+            Log.e("value : ",stud.get(i));
             sched.setName(stud.get(i));
             sched.setImage("image" + i);
             pa.set(i, pai[clri[i]]);
@@ -206,8 +218,21 @@ public class Selection extends AppCompatActivity{
         @Override
         protected String doInBackground(String... params) {
             try {
-                String data = URLEncoder.encode("class", "UTF-8") + "=" +
-                        URLEncoder.encode(key, "UTF-8");
+
+                key = params[0];
+                String data ;
+                if (params.length > 1) {
+                    String key1 = String.valueOf(Integer.parseInt(params[1]) - 1);
+                    data = URLEncoder.encode("class", "UTF-8") + "=" +
+                            URLEncoder.encode(key, "UTF-8") + "&" +
+                            URLEncoder.encode("hour", "UTF-8") + "=" +
+                            URLEncoder.encode(key1, "UTF-8");
+                            Log.i("working","if case working");
+                }else{
+                    Log.i("oooops","else case working");
+                    data = URLEncoder.encode("class", "UTF-8") + "=" +
+                            URLEncoder.encode(key, "UTF-8");
+                }
                 BufferedReader reader = null;
                 try {
                     URL url = new URL(util.ip+"Armweb/workspace");
@@ -235,8 +260,11 @@ public class Selection extends AppCompatActivity{
 
             if (result != null) {
                 try {
+
                     JSONObject mainjsonObj = new JSONObject(result);
                     JSONArray jsonar = mainjsonObj.getJSONArray("students");
+                    stud.clear();
+                    pa.clear();
 
                     // looping through All Contacts
                     for (int i = 0; i < jsonar.length(); i++) {
@@ -264,9 +292,11 @@ public class Selection extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String result) {
+
+            CustomListViewValuesArr.clear();
             setListData();
-            Resources res = getResources();
-            adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res){
+            Resources res1 = getResources();
+            adapter = new CustomAdapter(CustomListView, CustomListViewValuesArr, res1){
                 @Override
                 public View getView(int index, View convertView,ViewGroup parent) {
                     View v =super.getView(index, convertView, parent);
@@ -278,6 +308,7 @@ public class Selection extends AppCompatActivity{
                     return v;
                 }
             };
+            adapter.notifyDataSetChanged();
             list.setAdapter(adapter);
             //afterimport();
         }

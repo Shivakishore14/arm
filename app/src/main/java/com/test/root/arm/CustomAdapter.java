@@ -122,4 +122,8 @@ public class CustomAdapter extends BaseAdapter implements View.OnClickListener {
             sct.onItemClick(mPosition);
         }
     }
+    public void clearData() {
+        // clear the data
+        data.clear();
+    }
 }
