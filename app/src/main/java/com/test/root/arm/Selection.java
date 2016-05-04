@@ -9,7 +9,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -41,7 +45,7 @@ import java.util.ArrayList;
 /**
  * Created by root on 10/3/16.
  */
-public class Selection extends AppCompatActivity{
+public class Selection extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     ListView list;
     CustomAdapter adapter;
@@ -53,6 +57,7 @@ public class Selection extends AppCompatActivity{
     String[] pai = {"present", "absent", "late", "onDuty"} ;
     String s = "",key = "",value,cHour="hour",cClass="class";
     int btn ;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     float lastX = (float) 0.0;
     TextView importLast;
     String jsonStr ;
@@ -70,6 +75,8 @@ public class Selection extends AppCompatActivity{
 
 
         list = (ListView) findViewById(R.id.list);  // List defined in XML ( See Below )
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
 
 
@@ -113,6 +120,8 @@ public class Selection extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Upload up = new Upload();
+                up.execute();
                 Intent i = new Intent(Selection.this, Tabpreview.class);
                 i.putExtra("clri", clri);
                 String[] studarray = new String[stud.size()];
@@ -147,7 +156,6 @@ public class Selection extends AppCompatActivity{
             CustomListViewValuesArr.add(sched);
         }
     }
-
 
     public void onItemClick(int mPosition) {
         ListModel tempValues = (ListModel) CustomListViewValuesArr.get(mPosition);
@@ -211,6 +219,20 @@ public class Selection extends AppCompatActivity{
             bclass.setText("Class : "+item.getTitle());
         return true;
     }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+
+        // Simulate a long running activity
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //updateCountries();
+            }
+        }, 5000);
+    }
+
     private class BackTask extends AsyncTask<String, String, String> {
 
         private String result = null;
@@ -373,5 +395,44 @@ public class Selection extends AppCompatActivity{
 
 
     }
+    private class Upload extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
+        }
+
+        @Override
+        protected String doInBackground(String... arg){
+            try {
+                JSONArray ja = new JSONArray(), ja1 = new JSONArray();
+                JSONObject mainObj = new JSONObject();
+                ja = getJsonArrayFromStringArray(stud, pa);
+                mainObj.put("students", ja);
+                String result = mainObj.toString();
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Toast.makeText(getBaseContext(),result,Toast.LENGTH_SHORT).show();
+            }
+
+    }
+    private JSONArray getJsonArrayFromStringArray(ArrayList<String> a,ArrayList<String> b)throws Exception{
+        JSONObject[]obj = new JSONObject[a.size()];
+        JSONArray ja = new JSONArray();
+        for(int i = 0;i< a.size();i++){
+            obj[i] = new JSONObject();
+            obj[i].put("pa",b.get(i));
+            obj[i].put("stud",a.get(i));
+            ja.put(obj[i]);
+        }
+        return ja;
+    }
 }
