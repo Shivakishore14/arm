@@ -396,6 +396,7 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
 
     }
     private class Upload extends AsyncTask<String, String, String> {
+        String data,serverResult;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -410,7 +411,29 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
                 ja = getJsonArrayFromStringArray(stud, pa);
                 mainObj.put("students", ja);
                 String result = mainObj.toString();
-                return result;
+                if(result.length()!=0){
+                    data  = URLEncoder.encode("students", "UTF-8") + "=" +
+                            URLEncoder.encode(result, "UTF-8") + "&" +
+                            URLEncoder.encode("class", "UTF-8") + "=" +
+                            URLEncoder.encode(cClass, "UTF-8")+"&"+
+                            URLEncoder.encode("hour", "UTF-8") + "=" +
+                            URLEncoder.encode(cHour, "UTF-8");
+                    URL url = new URL(util.ip+"/Armweb/StudentsUpdate");
+                    URLConnection con = url.openConnection();
+                    con.setDoOutput(true);
+                    OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                    //getting response back
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    StringBuilder s = new StringBuilder();
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        s.append(line + "\n");
+                    }
+                    serverResult = s.toString();
+                }
+                return serverResult;
             }catch (Exception e){
                 e.printStackTrace();
             }

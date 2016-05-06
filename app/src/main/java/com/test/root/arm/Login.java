@@ -124,7 +124,8 @@ public class Login extends Activity{
         protected void onPostExecute(String result) {
 
            progress.dismiss();
-            notification.setText(result);
+            //notification.setText(result);
+            if(result!=null)
             if (!result.equals("NOT AUTHENTICATED")){
                 Intent i = new Intent(Login.this,Selection.class);
                 i.putExtra("json",result);
