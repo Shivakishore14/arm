@@ -392,8 +392,6 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
             bclass.setText(cClass);
             bhour.setText("Hour:"+cHour);
         }
-
-
     }
     private class Upload extends AsyncTask<String, String, String> {
         String data,serverResult;

@@ -6,6 +6,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -77,9 +79,11 @@ public class StudentsUpdate extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             String a = request.getParameter("students");
-            String b = request.getParameter("class");
-            String c = request.getParameter("hour");
+            String class1 = request.getParameter("class");
+            String hour = request.getParameter("hour");
             PrintWriter out = response.getWriter();
+            getStud(a);
+            util.toDatabase(stud,pa,class1,hour);
             out.println(a);
     }
 
@@ -93,22 +97,18 @@ public class StudentsUpdate extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    ArrayList<String> stud,pa;
+    List<String> stud,pa;
+    
     private void getStud(String result){
         try {
-
-            JSONObject mainjsonObj = new JSONObject(result);
-            JSONArray jsonar = mainjsonObj.getJSONArray("students");
-            // looping through All Contacts
-            for (int i = 0; i < jsonar.length(); i++) {
-                JSONObject c = jsonar.getJSONObject(i);
-                stud.add(c.getString("stud"));
-                pa.add(c.getString("pa"));
-                for(int j=0; j<4 ; j++ )
-                    if(pa.get(i).equals(pai[j])){
-                        clri[i] = j;
-                    }
-                }
+            JSONParser parser = new JSONParser();
+            JSONObject mainjsonObj = (JSONObject) parser.parse(result);
+            JSONArray jsonar =(JSONArray) mainjsonObj.get("students");
+            for (int i = 0; i < jsonar.size(); i++) {
+                JSONObject c = (JSONObject)jsonar.get(i);
+                stud.add((String)c.get("stud"));
+                pa.add((String)c.get("pa"));
+            }
         } catch (Exception e) {
                 e.printStackTrace();
         }

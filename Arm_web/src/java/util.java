@@ -55,5 +55,6 @@ public class util {
         String pa[]={"present","present","present","present","present","absent","absent","absent","absent"};
         return pa;
     }
+    public static void toDatabase(List<String> studName,List<String> pa,String class1,String hour){}
     
 }
