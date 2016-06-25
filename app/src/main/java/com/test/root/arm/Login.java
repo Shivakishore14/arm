@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,10 +26,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by root on 7/3/16.
@@ -41,10 +48,16 @@ public class Login extends Activity{
     String username, password;
     Boolean a;
     ProgressDialog progress ;
+    CookieManager cookieManager = new CookieManager();
+    SharedPreferences pref ;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CookieHandler.setDefault(cookieManager);
+        pref = getSharedPreferences("session", MODE_PRIVATE);
+        editor = pref.edit();
         setContentView(R.layout.login);
         uname = (EditText)findViewById(R.id.etuname);
         pass = (EditText)findViewById(R.id.etpass);
@@ -99,9 +112,37 @@ public class Login extends Activity{
                     URL url = new URL(util.ip+"/Armweb/Login");
                     URLConnection con = url.openConnection();
                     con.setDoOutput(true);
+
                     OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
                     writer.write(data);
                     writer.flush();
+                   // con.setRequestProperty();
+                    //
+                     final String COOKIES_HEADER = "Set-Cookie";
+                     java.net.CookieManager msCookieManager = new java.net.CookieManager();
+
+                    Map<String, List<String>> headerFields = con.getHeaderFields();
+                    List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+                    String t= "";
+                    if(cookiesHeader != null)
+                    {
+                        for (String cookie : cookiesHeader)
+                        {
+                            t = t + cookie + "::";
+                            msCookieManager.getCookieStore().add(null,HttpCookie.parse(cookie).get(0));
+                        }
+                    }
+                    Log.e("cookie",t);
+                    editor.putString("cookie",t);
+                    editor.commit();
+                    //
+                    //load back the
+                    if(msCookieManager.getCookieStore().getCookies().size() > 0)
+                    {
+                        //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
+                        //con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
+                    }
+                    //load the
                     //getting response back
                     reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     StringBuilder s = new StringBuilder();

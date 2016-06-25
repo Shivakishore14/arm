@@ -3,6 +3,7 @@ package com.test.root.arm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -37,10 +39,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpCookie;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by root on 10/3/16.
@@ -60,8 +66,10 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
     private SwipeRefreshLayout mSwipeRefreshLayout;
     float lastX = (float) 0.0;
     TextView importLast;
-    String jsonStr ;
+    String jsonStr , cookie ;
     static ArrayList<String> fclass = new ArrayList<String>(),stud  = new ArrayList<String>(),pa  = new ArrayList<String>();
+    SharedPreferences pref ;
+    java.net.CookieManager msCookieManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +80,18 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
         BackTask btask= new BackTask();
         btask.execute("");
         CustomListView = this;
+        pref = getSharedPreferences("session", MODE_PRIVATE);
+        cookie = pref.getString("cookie", null);
 
+        msCookieManager = new java.net.CookieManager();
+        List<String> cookiesHeader = Arrays.asList(cookie.split("::"));
+        if(cookiesHeader != null)
+        {
+            for (String cookie1 : cookiesHeader)
+            {
+                msCookieManager.getCookieStore().add(null,HttpCookie.parse(cookie1).get(0));
+            }
+        }
 
         list = (ListView) findViewById(R.id.list);  // List defined in XML ( See Below )
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.container);
@@ -260,6 +279,17 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
                     URL url = new URL(util.ip+"Armweb/workspace");
                     URLConnection con = url.openConnection();
                     con.setDoOutput(true);
+                    //////
+
+                  //  msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    if(msCookieManager.getCookieStore().getCookies().size() > 0)
+                    {
+                        Log.e("eafdasfadsf","working");
+                        //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
+                        con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
+                    }
+
+                    ///////
                     OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
                     writer.write(data);
                     writer.flush();
@@ -419,6 +449,14 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
                     URL url = new URL(util.ip+"/Armweb/StudentsUpdate");
                     URLConnection con = url.openConnection();
                     con.setDoOutput(true);
+                    ///
+                    if(msCookieManager.getCookieStore().getCookies().size() > 0)
+                    {
+                        Log.e("eafdasfadsf","working");
+                        con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
+                    }
+
+                    ///
                     OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
                     writer.write(data);
                     writer.flush();

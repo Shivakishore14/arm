@@ -6,12 +6,14 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +24,7 @@ import org.json.simple.parser.JSONParser;
  */
 @WebServlet(urlPatterns = {"/StudentsUpdate"})
 public class StudentsUpdate extends HttpServlet {
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -81,10 +84,19 @@ public class StudentsUpdate extends HttpServlet {
             String a = request.getParameter("students");
             String class1 = request.getParameter("class");
             String hour = request.getParameter("hour");
-            PrintWriter out = response.getWriter();
-            getStud(a);
-            util.toDatabase(stud,pa,class1,hour);
-            out.println(a);
+            String name;
+            HttpSession session=request.getSession(false);  
+            if(session!=null){ 
+                name = (String)session.getAttribute("name");
+                PrintWriter out = response.getWriter();
+                getStud(a);
+                util.toDatabase(stud,pa,class1,hour);
+                out.println(a);
+            }else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                System.out.println("not auth");
+            }
+            
     }
 
     /**
@@ -97,17 +109,19 @@ public class StudentsUpdate extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    List<String> stud,pa;
+    List<String> stud,pa= new ArrayList<String>();;
     
     private void getStud(String result){
+        System.out.println("result ==>"+result);
         try {
             JSONParser parser = new JSONParser();
             JSONObject mainjsonObj = (JSONObject) parser.parse(result);
             JSONArray jsonar =(JSONArray) mainjsonObj.get("students");
             for (int i = 0; i < jsonar.size(); i++) {
                 JSONObject c = (JSONObject)jsonar.get(i);
-                stud.add((String)c.get("stud"));
-                pa.add((String)c.get("pa"));
+               // System.out.println(c.get("pa"));
+               // stud.add("sk");
+               // pa.add((String)c.get("pa"));
             }
         } catch (Exception e) {
                 e.printStackTrace();

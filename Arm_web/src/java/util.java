@@ -28,7 +28,6 @@ public class util {
             stmt = conn.createStatement();
             String sql = "SELECT username FROM login where username like '"+name+"' && password like '"+pass+"';";
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println("w");
             if(rs.first())
                 return 1;
             else
@@ -38,7 +37,6 @@ public class util {
             e.printStackTrace();
             System.out.println(e);
         }
-        System.out.println("ws");
         return 1;
     }
     static String[] dummy = {"a","b","c","d","e","f","g","h"};
@@ -46,15 +44,18 @@ public class util {
     static String stud[]={"sken","ksihore","breakfree","stud2","stud3","kasda","asdasd","stud22","stud4"};
     static String pa[]={"present","absent","present","onDuty","present","absent","onDuty","late","present"};
     
-    public static String[] getStudents(String a){
+    public static String[] getStudents(String class1){
         //function here
         return stud;
     }
     public static String[] getpa(String class1,String hour){
-        //function here
+	//hour "1","2","3" ..etc
+        //return if present or absent for whole students
         String pa[]={"present","present","present","present","present","absent","absent","absent","absent"};
         return pa;
     }
-    public static void toDatabase(List<String> studName,List<String> pa,String class1,String hour){}
+    public static void toDatabase(List<String> studName,List<String> pa,String class1,String hour){
+	//save to DB
+    }
     
 }

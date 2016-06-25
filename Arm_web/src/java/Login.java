@@ -12,15 +12,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sun.security.pkcs11.wrapper.Functions;
 
 
 /**
  *
  * @author root
  */
-@WebServlet(urlPatterns = {"/Login"})
+@WebServlet(urlPatterns = {"/Login", "/"})
 public class Login extends HttpServlet {
 
     /**
@@ -74,6 +76,9 @@ public class Login extends HttpServlet {
         String name = request.getParameter("name");
         String pass = request.getParameter("password"); 
         PrintWriter out = response.getWriter();
+        HttpSession session=request.getSession(false);
+        if (session != null)
+            session.invalidate();
         if (util.fun(name,pass) == 1){
             JSONArray ja = new JSONArray(),ja1 = new JSONArray(),ja2 = new JSONArray();
             JSONObject obj1 = new JSONObject(), obj2 = new JSONObject(),obj3 = new JSONObject(),obj4 = new JSONObject(),mainObj =  new JSONObject();
@@ -82,6 +87,10 @@ public class Login extends HttpServlet {
             obj1.put("classes", ja);
             obj2.put("Hour",util.hour);
             obj3.put("current",util.current);
+             
+            session = request.getSession(true);
+            session.setAttribute("name", name);
+            System.out.print("name-->"+name);
             //obj4.put("students",ja2);
             //ja1 = getJsonArrayFromJsonObjects(obj1,obj2,obj3,obj4);
             ja1 = getJsonArrayFromJsonObjects(obj1,obj2,obj3);
@@ -93,6 +102,7 @@ public class Login extends HttpServlet {
             String jsonText = out1.toString();
             out.println(jsonText);
         }else{
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             out.print("NOT AUTHENTICATED");
         }
     }

@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
     
@@ -102,14 +103,19 @@ public class workspace extends HttpServlet {
         PrintWriter out = response.getWriter();
         String class1 = request.getParameter("class");
         String hour = request.getParameter("hour");
-        if(hour == null){
-            try {
-                current(out,class1);
-            }catch(Exception e){}
-        }else{
-             try {
-                importlast(out,class1,hour);
-            }catch(Exception e){}
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }else {
+            if(hour == null){
+                try {
+                    current(out,class1);
+                }catch(Exception e){}
+            }else{
+                try {
+                    importlast(out,class1,hour);
+                }catch(Exception e){}
+            }
         }
     }
 
