@@ -2,6 +2,7 @@ package com.test.root.arm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -26,7 +27,10 @@ public class Settings extends Activity{
         pass = (EditText) findViewById(R.id.etdbpass);
         ip = (EditText) findViewById(R.id.etdbip);
         save = (Button) findViewById(R.id.btnsave);
-        sp = getSharedPreferences("dbinfo", Context.MODE_PRIVATE);
+        sp = getSharedPreferences("settingsInfo", Context.MODE_PRIVATE);
+        uname.setText(sp.getString("username",""));
+        pass.setText(sp.getString("password",""));
+        ip.setText(sp.getString("serverIp",""));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(Color.parseColor("#00796B"));
@@ -37,11 +41,12 @@ public class Settings extends Activity{
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putString("dbuname",uname.getText().toString());
-                editor.putString("dbpass",pass.getText().toString());
-                editor.putString("dbip",ip.getText().toString());
+                editor.putString("username",uname.getText().toString());
+                editor.putString("password",pass.getText().toString());
+                editor.putString("serverIp", ip.getText().toString());
                 editor.commit();
-
+                Intent i = new Intent(Settings.this, Login.class);
+                startActivity(i);
             }
         });
 

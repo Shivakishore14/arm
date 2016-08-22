@@ -66,7 +66,7 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
     private SwipeRefreshLayout mSwipeRefreshLayout;
     float lastX = (float) 0.0;
     TextView importLast;
-    String jsonStr , cookie ;
+    String jsonStr, cookie;
     static ArrayList<String> fclass = new ArrayList<String>(),stud  = new ArrayList<String>(),pa  = new ArrayList<String>();
     SharedPreferences pref ;
     java.net.CookieManager msCookieManager;
@@ -124,6 +124,7 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
 
         registerForContextMenu(bclass);
         registerForContextMenu(bhour);
+        registerForContextMenu(importLast);
         bclass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +132,12 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
             }
         });
         bhour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.showContextMenu();
+            }
+        });
+        importLast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.showContextMenu();
@@ -147,14 +154,6 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
                 studarray = stud.toArray(studarray);
                 i.putExtra("stud",studarray);
                 startActivity(i);
-            }
-        });
-
-        importLast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BackTask btask= new BackTask();
-                btask.execute("cse","5");
             }
         });
 
@@ -226,6 +225,13 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
                     menu.add(0, v.getId(), 0, fclass.get(i));
                 }
                 break;
+            case R.id.tvimport:
+                menu.setHeaderTitle("Select Hour");
+                btn = 2;
+                for ( int i = 1; i < 9; i++ ) {
+                    menu.add(0, v.getId(), 0, String.valueOf(i));
+                }
+                break;
         }
 
     }
@@ -234,9 +240,15 @@ public class Selection extends AppCompatActivity implements SwipeRefreshLayout.O
     public boolean onContextItemSelected(MenuItem item) {
         if(btn == 0)
             bhour.setText("Hour : "+item.getTitle());
-        else
+        else if(btn == 1)
             bclass.setText("Class : "+item.getTitle());
+        else
+            importHour((String) item.getTitle());
         return true;
+    }
+    private void importHour(String hour){
+        BackTask btask= new BackTask();
+        btask.execute("cse",hour);
     }
 
     @Override

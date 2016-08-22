@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,7 +32,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 
@@ -44,12 +42,11 @@ public class Login extends Activity{
     Button login;
     EditText uname, pass;
     TextView notification;
-    SharedPreferences sp ;
     String username, password;
     Boolean a;
     ProgressDialog progress ;
     CookieManager cookieManager = new CookieManager();
-    SharedPreferences pref ;
+    SharedPreferences pref ,sp;
     SharedPreferences.Editor editor;
 
     @Override
@@ -63,7 +60,7 @@ public class Login extends Activity{
         pass = (EditText)findViewById(R.id.etpass);
         login = (Button)findViewById(R.id.btlogin);
         notification = (TextView) findViewById(R.id.tvLoginNotification);
-        sp  = getApplicationContext().getSharedPreferences("dbinfo", Context.MODE_PRIVATE);
+        sp  = getApplicationContext().getSharedPreferences("settingsInfo", Context.MODE_PRIVATE);
         progress = new ProgressDialog(this);
         progress.setMessage("Loging in...");
 
@@ -74,26 +71,36 @@ public class Login extends Activity{
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(Color.parseColor("#00796B"));
         }
-
+        if (sp.getString("username",null) == null){
+            Intent i =new Intent(Login.this, Settings.class);
+            startActivity(i);
+        }
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 username = uname.getText().toString();
                 password = pass.getText().toString();
+                String suname = sp.getString("username",null);
+                String spass = sp.getString("password",null);
                 if (username.length() != 0) {
-                    try {
-                        BackTask st = new BackTask();
-                        st.execute();
-                        notification.setText("Logging in as :" + username);
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    if (suname.equals(username)&&spass.equals(password)) {
+                        Intent i = new Intent(Login.this, Settings.class);
+                        startActivity(i);
+                    } else {
+                        try {
+                            BackTask st = new BackTask();
+                            st.execute();
+                            notification.setText("Logging in as :" + username);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                   } else {
+                }else{
                     notification.setText("Enter valid username");
                 }
+
             }
         });
-
     }
 
     private class BackTask extends AsyncTask<String, String, String> {
